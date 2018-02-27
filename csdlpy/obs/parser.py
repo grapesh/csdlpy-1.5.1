@@ -1,7 +1,7 @@
 import csv
 
 #==============================================================================
-def pointsList ( csvFile, fields ):
+def stationsList ( csvFile, fields ):
     """
     Parses fields in a csv file
     Returns values in the order of provided fields.
