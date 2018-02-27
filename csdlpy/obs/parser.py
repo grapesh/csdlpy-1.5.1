@@ -2,10 +2,10 @@ import csv
 
 #==============================================================================
 def pointsList ( csvFile, fields ):
-   """
-   Parses fields in a csv file
-   Returns values in the order of provided fields.
-   """
+    """
+    Parses fields in a csv file
+    Returns values in the order of provided fields.
+    """
     output = []
     reader = csv.DictReader (csvFile)
     
