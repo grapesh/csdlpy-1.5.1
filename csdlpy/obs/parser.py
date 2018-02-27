@@ -7,12 +7,11 @@ def pointsList ( csvFile, fields ):
     Returns values in the order of provided fields.
     """
     output = []
-    reader = csv.DictReader (csvFile)
-    
-    for row in reader:
-        line = []
-        for f in fields:
-            line.append (row[f])
-        output.append(line)
-
+    with open(csvFile) as csvf:
+        reader = csv.DictReader (csvf)        
+        for row in reader:
+            line = []
+            for f in fields:
+                line.append (row[f])
+            output.append(line)
     return output
