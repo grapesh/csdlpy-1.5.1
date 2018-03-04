@@ -100,7 +100,7 @@ def readlines_ssl (remote, tmpDir=None, tmpFile=None):
 
 #==============================================================================
 def upload(localFile, userHost, remoteFolder):
-    cmd = 'scp ' + localFile + ' ' + userHost + ':' + remoteFolder
+    cmd = 'scp -q ' + localFile + ' ' + userHost + ':' + remoteFolder
     if os.system(cmd) == 0:
         print '[info]: executed ' + cmd
     else:
