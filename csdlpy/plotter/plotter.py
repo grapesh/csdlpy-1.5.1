@@ -12,6 +12,9 @@ import matplotlib
 matplotlib.use('Agg',warn=False)
 import matplotlib.pyplot as plt
 import matplotlib.tri    as tri
+import matplotlib.patches as patches
+import matplotlib.dates as mdates
+from datetime import timedelta as dt
 
 from csdlpy import interp, valstat, transfer
 
@@ -289,6 +292,98 @@ def addSurface (grid, surface,
     
     cbar = plt.colorbar()
     cbar.ax.tick_params(labelsize=8) 
+
+
+#==============================================================================
+def stageStationPlot (xlim, ylim, now, datums, floodlevels):
+    """
+    stages the hydrograph plot with vertical datums and flood levels.
+    Returns figure and axis handles.
+    """
+
+    fig, ax = plt.subplots(sharex=True, figsize=(14,4.5))
+    ax2 = ax.twinx()
+    ax.plot([],[])
+
+    datum_mhhw_ft = datums['datum_mhhw_ft']
+    datum_mllw_ft = datums['datum_mllw_ft']
+    datum_msl_ft  = datums['datum_msl_ft']
+    datum_hat_ft  = datums['datum_hat_ft']
+    
+    fl_major_ft   = floodlevels['fl_major_ft']
+    fl_moder_ft   = floodlevels['fl_moder_ft']
+    fl_minor_ft   = floodlevels['fl_minor_ft']
+
+    # Compute and plot minor flood level
+    fl_minor_m = 1./3.28084*(datum_mhhw_ft+fl_minor_ft-datum_msl_ft) 
+    if not np.isnan(fl_minor_m) and fl_minor_m < ylim[1]:
+        ax.plot(xlim[0], fl_minor_m, 'dr', markerfacecolor='r')
+        ax.text(xlim[0], fl_minor_m,\
+                'Minor Flood: ' + str(np.round(fl_minor_m,2)),color='k',fontsize=7)
+        p = patches.Rectangle((mdates.date2num(xlim[0]), fl_minor_m), \
+                              mdates.date2num(xlim[1])-mdates.date2num(xlim[0]), \
+                              ylim[1]-fl_minor_m, \
+                              color='r',alpha=0.15)
+        ax.add_patch(p)
+            
+    # Compute and plot moderate flood level
+    fl_moder_m = 1./3.28084*(datum_mhhw_ft+fl_moder_ft-datum_msl_ft) 
+    if not np.isnan(fl_moder_m) and fl_moder_m < ylim[1]:
+        ax.plot(xlim[0], fl_moder_m, 'dr', markerfacecolor='r')
+        ax.text(xlim[0], fl_moder_m,\
+                'Moderate Flood: '+ str(np.round(fl_moder_m,2)),color='k',fontsize=7)
+        p = patches.Rectangle((mdates.date2num(xlim[0]), fl_moder_m), \
+                              mdates.date2num(xlim[1])-mdates.date2num(xlim[0]), \
+                              ylim[1]-fl_moder_m, \
+                              color='r',alpha=0.15)
+        ax.add_patch(p)
+
+    # Compute and plot major flood level
+    fl_major_m = 1./3.28084*(datum_mhhw_ft+fl_major_ft-datum_msl_ft) 
+    if not np.isnan(fl_major_m) and fl_major_m < ylim[1]:
+        ax.plot(xlim[0], fl_major_m, 'dr', markerfacecolor='r')
+        ax.text(xlim[0], fl_major_m,\
+                'Major Flood: ' + str(np.round(fl_major_m,2)),color='k',fontsize=7)
+        p = patches.Rectangle((mdates.date2num(xlim[0]), fl_major_m), \
+                              mdates.date2num(xlim[1])-mdates.date2num(xlim[0]), \
+                              ylim[1]-fl_major_m, \
+                              color='r',alpha=0.15)
+        ax.add_patch(p)
+
+    # Compute and plot MHHW datum
+    datum_mhhw_m = 1./3.28084*(datum_mhhw_ft-datum_msl_ft) 
+    if not np.isnan(datum_mhhw_m) and datum_mhhw_m < ylim[1]:
+        ax.plot(xlim, [datum_mhhw_m, datum_mhhw_m], color='c')
+        ax.plot(xlim[1], datum_mhhw_m, 'dc', markerfacecolor='c')
+        ax.text(xlim[1] - dt(hours=6), 
+                datum_mhhw_m + 0.05, 'MHHW',color='c',fontsize=7)
+
+    # Compute and plot MLLW datum
+    datum_mllw_m = 1./3.28084*(datum_mllw_ft-datum_msl_ft) 
+    if not np.isnan(datum_mllw_m) and datum_mllw_m > ylim[0] and datum_mllw_m < ylim[1]:
+        ax.plot(xlim, [datum_mllw_m, datum_mllw_m], color='c')
+        ax.plot(xlim[1], datum_mllw_m, 'dc', markerfacecolor='c')
+        ax.text(xlim[1] - dt(hours=6), 
+                datum_mllw_m + 0.05, 'MLLW',color='c',fontsize=7)
+
+    # Compute and plot HAT datum
+    datum_hat_m  = 1./3.28084*(datum_hat_ft-datum_msl_ft) 
+    if not np.isnan(datum_hat_m) and datum_hat_m < ylim[1]:
+        ax.plot(xlim, [datum_hat_m, datum_hat_m], color='y')
+        ax.plot(xlim[1], datum_hat_m, 'dy', markerfacecolor='y')
+        ax.text(xlim[1] - dt(hours=6), 
+                datum_hat_m  + 0.05, 'HAT',color='y',fontsize=7)
+
+    # Plot LMSL datum
+    ax.plot(xlim[1], 0, 'dk',color='k')
+    ax.text(xlim[1] - dt(hours=6), 0.05, 'LMSL',color='k',fontsize=7)
+
+    # Plot 'now' line
+    ax.plot( [now, now], ylim, 'k',linewidth=1)
+    ax.text(  now + dt(hours=1),  ylim[1]-0.4,'N O W', color='k',fontsize=6, 
+              rotation='vertical', style='italic')
+    
+    return fig, ax, ax2
 
 #====================================================================
 def plot_estofs_timeseries (obs_dates,      obs_values, 
