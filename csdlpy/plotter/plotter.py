@@ -84,10 +84,14 @@ def readCities (citiesFile):
     xc   = []
     yc   = []
     name = []
-    for row in s:        
-        xc.append(float(row[3]))
-        yc.append(float(row[2]))
-        name.append(row[0])
+    for row in s:       
+        if len(row)>0:
+            lon = float(row[3])
+            if lon >0.:
+                lon = lon-360.
+            xc.append(lon)
+            yc.append(float(row[2]))
+            name.append(row[0])
     f.close()        
 
     return {'lon' : xc, 
@@ -113,7 +117,6 @@ def plotCities (cities, xlim, ylim, col='0.5',fs=6):
         xo = cities['lon'][n]
         yo = cities['lat'][n]
         nm = cities['name'][n]
-        
         if xlim[0] <= xo and xo <= xlim[1] and ylim[0] <= yo and yo <= ylim[1]:
             plt.plot(xo, yo, 'o', ms=2, color=col, mfc='w', zorder=100,lw=1)
             plt.text(xo, yo, nm, color=col, zorder=100, fontsize=fs)
@@ -125,13 +128,14 @@ def plotCoastline (coast, col='0.5'):
 
     
 #==============================================================================
-def plotTrack (t, color='k',linestyle='-',markersize=1,zorder=1):
+def plotTrack (t, color='k',linestyle='-',markersize=1,zorder=1, fs=5):
     
     plt.plot (t['lon'],t['lat'], color=color, linestyle=linestyle, \
-              markersize=markersize,zorder=zorder)    
+              markersize=markersize,zorder=zorder)
+
     for n in range(len(t['lon'])):
               plt.text (t['lon'][n], t['lat'][n],str(int(t['vmax'][n])), \
-                          color=color)
+                          color=color, fontsize=fs)
         
 #==============================================================================
 def plotMap (x, y, fig_w=8.0, lonlim=None, latlim=None, coast=None): 
