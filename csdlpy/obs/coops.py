@@ -10,7 +10,7 @@ from csdlpy import transfer
 
 #==============================================================================
 def getData (stationID,  dateRange, 
-             product='waterlevelrawsixmin', datum='MSL', units='meters'):
+             product='waterlevelrawsixmin', datum='MSL', units='meters', verbose=False):
     
     """ 
     Allows for downloading the observations from NOAA's 
@@ -84,9 +84,9 @@ def getData (stationID,  dateRange,
                '&datum=' + datum + '&unit=' + unitID + 
                '&timeZone=' + timeZoneID + tideFreqStr + 
                '&Submit=Submit')
-    #print '[info]: Downloading ', request    
+    print '[info]: Downloading ', request    
            
-    lines = transfer.readlines_ssl (request)
+    lines = transfer.readlines_ssl (request, verbose)
     
     ## Parse the response
     dates  = []
@@ -174,19 +174,22 @@ def getActiveStations ():
     request = 'https://access.co-ops.nos.noaa.gov/nwsproducts.html?type=current'
     lines = transfer.readlines (request)    
 
-    nos_id = []
-    nws_id   = []
+    active = dict()
+    active['nos_id'] = []
+    active['nws_id'] = []
+    active['lon']    = []
+    active['lat']    = []
     for line in lines:        
         if line[0:4] == '<br>':
-            stid = line[5:12]
             try:
-                stid = int(stid)                
-                nos_id.append(stid)    
-                nws_id.append(line[13:18])    
+                s = line.split()                                 
+                active['nos_id'].append(int(s[1]))
+                active['nws_id'].append(s[2])   
+                active['lon'].append(float(s[4]))
+                active['lat'].append(float(s[3]))
             except:
                 pass                    
-    return {'nos' : nos_id,
-            'nws' : nws_id}
+    return active
 
 #==============================================================================
 def bias_table (csvFile, dates):
