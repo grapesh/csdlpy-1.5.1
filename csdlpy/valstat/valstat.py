@@ -28,7 +28,10 @@ def rms(V):
     V    = V[ind]
     summ = np.sum(V**2)
     N    = 1.0*len(V)
-    return np.sqrt( summ/N )
+    if N>0:
+        return np.sqrt( summ/N )
+    else:
+        return np.nan
 
 #==============================================================================
 def var_explained(m, d):
@@ -40,7 +43,7 @@ def var_explained(m, d):
     if eps <  0:
         eps = 0.
     if eps >  100.:
-        eps = 100
+        eps = 100.0
     return eps
 
 #==============================================================================
@@ -87,7 +90,7 @@ def metrics (data, model, dates):
     if npts:
         rmsd = rms(model-data)
         peak = np.nanmax(model) - np.nanmax(data)
-        plag = (dates[np.argmax(model)] - dates[np.argmax(data)]).total_seconds() 
+        plag = (dates[np.nanargmax(model)] - dates[np.nanargmax(data)]).total_seconds() 
         plag = plag/60. #in minutes
         bias = np.nanmean(model) - np.nanmean(data)
         vexp = var_explained (model, data)
