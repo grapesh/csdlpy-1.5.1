@@ -22,7 +22,11 @@ def download (remote, local):
             with open(local, "w") as code:
                 code.write(data)
         except:
-            print '[warn]: file ', remote, ' was not downloaded'
+            print '[warn]: file ', remote, ' was not downloaded. trying to cp...'
+            try:
+                os.system('cp ' + remote + ' ' + local)
+            except:
+                print '[warn]: file ', remote, ' could not be copied'
             
     else:
         print '[warn]: file ', local, ' exists, skipping.'
@@ -36,10 +40,17 @@ def refresh (remote, local):
         print '[info]: downloading ', remote, ' as ', local
     else:
         print '[info]: overwriting ', local, ' file with ', remote
-    f = urllib2.urlopen(remote)
-    data = f.read()
-    with open(local, "w") as code:
-        code.write(data)
+    try:
+        f = urllib2.urlopen(remote)
+        data = f.read()
+        with open(local, "w") as code:
+            code.write(data)
+    except:
+        print '[warn]: file ', remote, ' was not downloaded. trying to cp...'
+        try:
+            os.system('cp ' + remote + ' ' + local)
+        except:
+            print '[warn]: file ', remote, ' could not be copied'
 
 #==============================================================================
 def readlines (remote, tmpDir=None, tmpFile=None):
@@ -67,7 +78,7 @@ def readlines (remote, tmpDir=None, tmpFile=None):
     return lines
 
 #==============================================================================
-def readlines_ssl (remote, tmpDir=None, tmpFile=None):
+def readlines_ssl (remote, verbose=False, tmpDir=None, tmpFile=None):
     """
     Deals with expired SSL certificate issue.
     1. Downloads remote into temporary file
@@ -83,9 +94,10 @@ def readlines_ssl (remote, tmpDir=None, tmpFile=None):
     if tmpDir is not None:
         tmpFile = os.path.join(tmpDir, tmpFile)
 
-    print '[info]: downloading ', remote, ' as temporary ', tmpFile
+    if verbose:
+        print '[info]: downloading ', remote, ' as temporary ', tmpFile
 
-    f        = open( tmpFile, 'w' )
+    f = open( tmpFile, 'w' )
     try:
         response = urllib2.urlopen(remote, context = ctx)
     except urllib2.URLError as e:
