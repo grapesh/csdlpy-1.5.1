@@ -22,7 +22,7 @@ def readGrid ( gridFile ):
     http://adcirc.org/home/documentation/users-manual-v50/
     input-file-descriptions/adcirc-grid-and-boundary-information-file-fort-14/
     """
-    print '[info]: Reading the grid from ' + gridFile + '.'
+    print '[info]: Reading the grid from ' + gridFile
     if not os.path.exists (gridFile):
         print '[error]: File ' + gridFile + ' does not exist.'
         return
@@ -427,7 +427,7 @@ def readFort15 ( fort15file ):
             }
 
 #==============================================================================
-def writeOffset63 ( val, offset63file ):
+def writeOffset63 ( val, offset63file, note=None):
     """
     Writes ADCIRC offset.63 file in ASCII format
     for use with pseudo pressure loading option
@@ -439,12 +439,13 @@ def writeOffset63 ( val, offset63file ):
     """
     print '[info]: writing Offset63 file...'
     f = open(offset63file,'w')
-    f.write("# ADCIRC Offset file\n")
+    if note is None:
+        f.write("# ADCIRC Offset file\n")
+    else:
+        f.write("# " + note + "\n")
     f.write("0.0\n")
     f.write("0.0\n")    
     for n in range(len(val)):
         f.write(str(n+1) + ' ' + str(val[n]) + '\n')
     f.close()
     return None
-
-    
