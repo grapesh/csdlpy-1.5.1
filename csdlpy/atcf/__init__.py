@@ -1,2 +1,2 @@
 from atcf import *
-__all__ = ['atcf','plot']
+__all__ = ['read','plot']
