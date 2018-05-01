@@ -18,7 +18,7 @@ def track (ax, t, color='k',linestyle='-',markersize=1,zorder=1, fs=5):
                           color=color, fontsize=fs)
                           
 #==============================================================================
-def size (ax, t, neq, col):
+def size (ax, t, neq, color='k', zorder=1):
     
     da = np.pi/180.;
     R  = 6370.
@@ -65,8 +65,8 @@ def size (ax, t, neq, col):
                 yiso.append( y + dy*np.sin(a)  )
                 pass
             
-            ax.plot(xiso, yiso, color=col)
-            ax.plot((xiso[0],xiso[-1]), (yiso[0],yiso[-1]), color=col)
+            ax.plot(xiso, yiso, color=color, zorder=zorder)
+            ax.plot((xiso[0],xiso[-1]), (yiso[0],yiso[-1]), color=color, zorder=zorder)
             
 #==============================================================================
 def swath (ax, t, neq):
