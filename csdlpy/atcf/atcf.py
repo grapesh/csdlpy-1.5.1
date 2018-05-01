@@ -12,6 +12,8 @@ def readTrack ( atcfFile, product=None ):
     Reads ATCF-formatted file
     Args:
         'atcfFile': (str) - full path to the ATCF file
+        'product' : (str) = 'BEST', 'OFCL', 'JTWC', etc...
+        
     Returns:
         dict: 'lat', 'lon', 'vmax', 'mslp','dates'
     """
