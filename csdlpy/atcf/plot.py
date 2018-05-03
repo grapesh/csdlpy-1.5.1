@@ -48,22 +48,19 @@ def size (ax, t, neq, color='k', zorder=1):
                 dx = 180./(np.pi*R)*nw/np.cos( np.radians(y))
                 dy = 180./(np.pi*R)*nw
                 xiso.append( x + dx*np.cos(a)  )
-                yiso.append( y + dy*np.sin(a)  )
-                pass
+                yiso.append( y + dy*np.sin(a)  )                
 
             for a in np.arange(np.pi,    1.5*np.pi, da):
                 dx = 180./(np.pi*R)*sw/np.cos( np.radians(y))
                 dy = 180./(np.pi*R)*sw
                 xiso.append( x + dx*np.cos(a)  )
-                yiso.append( y + dy*np.sin(a)  )
-                pass
+                yiso.append( y + dy*np.sin(a)  )                
 
             for a in np.arange(1.5*np.pi, 2.*np.pi, da):
                 dx = 180./(np.pi*R)*se/np.cos( np.radians(y))
                 dy = 180./(np.pi*R)*se
                 xiso.append( x + dx*np.cos(a)  )
-                yiso.append( y + dy*np.sin(a)  )
-                pass
+                yiso.append( y + dy*np.sin(a)  )                
             
             ax.plot(xiso, yiso, color=color, zorder=zorder)
             ax.plot((xiso[0],xiso[-1]), (yiso[0],yiso[-1]), color=color, zorder=zorder)
