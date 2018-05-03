@@ -71,4 +71,8 @@ def size (ax, t, neq, color='k', zorder=1):
 #==============================================================================
 def swath (ax, t, neq):
     print '[warn]: function not yet implemented.'
+
+    #==============================================================================
+def RMax (ax, t):
+    print '[warn]: function not yet implemented.'
     
