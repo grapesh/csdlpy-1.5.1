@@ -17,7 +17,7 @@ def track ( atcfFile, product=None ):
         'atcfFile': (str) - full path to the ATCF file
         'product' : (str) = 'BEST', 'OFCL', etc...
     """
-    #TODO: Read out Rmax
+    #TODO: Read out Rmax (only for fort.22, or *.forcing files)
     
     print '[info]: reading ATCF file ', atcfFile
     
