@@ -12,10 +12,11 @@ import numpy as np
 #==============================================================================
 def track ( atcfFile, product=None ):
     """
-    Reads ATCF-formatted file
+    Reads ATCF-formatted file (e.g. NHC/JTWC track, advisory, best track, or 
+                               ADCIRC fort.22 file, for NWS options 19 or 20)    
     Args:
         'atcfFile': (str) - full path to the ATCF file
-        'product' : (str) = 'BEST', 'OFCL', etc...
+        'product' : (str) = 'BEST', 'OFCL', etc...        
     """
     #TODO: Read out Rmax (only for fort.22, or *.forcing files)
     
