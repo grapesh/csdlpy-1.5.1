@@ -1,5 +1,5 @@
 
-![CSDLPY](ftp://ocsftp.ncd.noaa.gov/estofs/img/saffir-simpson.png)
+![CSDLPY](http://polar.ncep.noaa.gov/estofs/csdlpy-logo.png)
 
 # csdlpy-1.5.1
 
