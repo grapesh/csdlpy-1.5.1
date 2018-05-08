@@ -1,5 +1,6 @@
 
-![CSDLPY](http://polar.ncep.noaa.gov/estofs/csdlpy-logo.png)
+![CSDLPY](http://polar.ncep.noaa.gov/estofs/csdlpy-logo.png)  |   CSDLPY
+--------------------------------------------------------------|---------
 
 # csdlpy-1.5.1
 
