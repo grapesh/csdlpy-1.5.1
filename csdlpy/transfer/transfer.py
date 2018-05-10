@@ -85,6 +85,8 @@ def readlines_ssl (remote, verbose=False, tmpDir=None, tmpFile=None):
     2. Reads line by line
     3. Removes temporary file
     """
+    lines = []
+    
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode    = ssl.CERT_NONE 
@@ -100,9 +102,9 @@ def readlines_ssl (remote, verbose=False, tmpDir=None, tmpFile=None):
     f = open( tmpFile, 'w' )
     try:
         response = urllib2.urlopen(remote, context = ctx)
+        f.write ( response.read() )
     except urllib2.URLError as e:
         print e.reason       
-    f.write ( response.read() )
     f.close ()
 
     lines  = open(tmpFile).readlines()
