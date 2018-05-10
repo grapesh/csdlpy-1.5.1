@@ -44,6 +44,8 @@ def track ( atcfFile, product=None ):
     my34knots = [None] * len(myDates)
     my50knots = [None] * len(myDates)
     my64knots = [None] * len(myDates)
+    myRmax    = [None] * len(myDates)   
+    
     # Run on lines, compare with unique dates, fill out the fields
     for line in plines:
         r = line.strip().split(',')
@@ -84,10 +86,16 @@ def track ( atcfFile, product=None ):
                                      float(r[15].strip()),
                                      float(r[16].strip()) ]
                     
+                myRmax[n]        = [ float(r[34].strip()),
+                                     float(r[35].strip()),
+                                     float(r[36].strip()),
+                                     float(r[37].strip()) ]
+                    
     return { 
             'dates' : myDates, 
             'lat'   : myLat,   'lon' : myLon,
             'vmax'  : myVmax, 'mslp' : myMSLP,
             'neq34' : my34knots,
             'neq50' : my50knots,
-            'neq64' : my64knots}
+            'neq64' : my64knots,
+            'rmax'  : myRmax}
