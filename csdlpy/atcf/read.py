@@ -54,6 +54,10 @@ def track ( atcfFile, product=None ):
     for line in plines:
         r = line.strip().split(',')
         d = datetime.strptime(r[2].strip(),'%Y%m%d%H')
+        tau = int(r[5].strip())
+        if tau:
+            d = d + timedelta(hours=tau)
+
         for n in range(len(myDates)):
 
             if myDates[n] == d:
