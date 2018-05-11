@@ -7,6 +7,7 @@ Created on Thu Mar 16 13:24:14 2017
 
 import sys
 from datetime import datetime
+from datetime import timedelta
 import numpy as np
 
 #==============================================================================
@@ -29,8 +30,11 @@ def track ( atcfFile, product=None ):
     pdates = []
     for line in lines:
         r = line.strip().split(',')
-        p = r[4].strip()
+        p = r[4].strip()        
         d = datetime.strptime(r[2].strip(),'%Y%m%d%H')
+        tau = int(r[5].strip())
+        if tau:
+            d = d + timedelta(hours=tau)
         if product is None or p in product:
             plines.append( line )
             pdates.append( d )
@@ -85,11 +89,13 @@ def track ( atcfFile, product=None ):
                                      float(r[14].strip()),
                                      float(r[15].strip()),
                                      float(r[16].strip()) ]
-                    
-                myRmax[n]        = [ float(r[34].strip()),
-                                     float(r[35].strip()),
-                                     float(r[36].strip()),
-                                     float(r[37].strip()) ]
+                try:    
+                    myRmax[n]        = [ float(r[34].strip()),
+                                         float(r[35].strip()),
+                                         float(r[36].strip()),
+                                         float(r[37].strip()) ]
+                except:
+                    pass
                     
     return { 
             'dates' : myDates, 
