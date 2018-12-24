@@ -79,8 +79,10 @@ def getData (stationID,  dateRange,
         
     request = ( serverSide + product + '/plain/response.jsp?stationId=' + 
                stationID + 
-               '&beginDate=' + dateRange[0].strftime("%Y%m%d") +
+               '&beginDate=' + dateRange[0].strftime("%Y%m%d") + 
+               '%20' + dateRange[0].strftime("%H:%M") + 
                '&endDate='   + dateRange[1].strftime("%Y%m%d") +
+               '%20' + dateRange[1].strftime("%H:%M") + 
                '&datum=' + datum + '&unit=' + unitID + 
                '&timeZone=' + timeZoneID + tideFreqStr + 
                '&Submit=Submit')
@@ -182,11 +184,21 @@ def getActiveStations ():
     for line in lines:        
         if line[0:4] == '<br>':
             try:
-                s = line.split()                                 
-                active['nos_id'].append(int(s[1]))
-                active['nws_id'].append(s[2])   
-                active['lon'].append(float(s[4]))
-                active['lat'].append(float(s[3]))
+                ## Well, COOPS became messy with this table.
+                ## Switching back to formatted read... Sigh 
+
+                #s = line.split()                                 
+                #active['nos_id'].append(int(s[1]))
+                #active['nws_id'].append(s[2])   
+                #active['lon'].append(float(s[4]))
+                #active['lat'].append(float(s[3]))
+
+                active['nos_id'].append(int(line[5:12]))
+                active['nws_id'].append(line[13:18])
+                active['lon'].append(float(line[65:76]))
+                active['lat'].append(float(line[38:49]))
+
+
             except:
                 pass                    
     return active

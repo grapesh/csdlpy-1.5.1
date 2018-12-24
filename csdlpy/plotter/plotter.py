@@ -153,6 +153,7 @@ def plotMap (x, y, fig_w=8.0, lonlim=None, latlim=None, coast=None):
     print '[info]: Creating a figure ', str(fig_w),'x',str(fig_h), 'inches.'
     
     fig = plt.figure(figsize=[fig_w, fig_h])
+ 
     if lonlim is None:
         plt.xlim([minx, maxx])
     else:

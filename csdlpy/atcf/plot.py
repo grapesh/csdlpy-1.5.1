@@ -9,7 +9,7 @@ import numpy as np
 
 #==============================================================================
 def track (ax, t, color='k',linestyle='-',markersize=1,zorder=1, fs=5):
-    
+   
     ax.plot (t['lon'],t['lat'], color=color, linestyle=linestyle, \
               markersize=markersize,zorder=zorder)
 
@@ -20,7 +20,7 @@ def track (ax, t, color='k',linestyle='-',markersize=1,zorder=1, fs=5):
 #==============================================================================
 def size (ax, t, neq, color='k', zorder=1):
     
-    da = np.pi/180.;
+    da = np.pi/180.
     R  = 6370.
 
     for n in range(len(t['lon'])):
@@ -34,7 +34,11 @@ def size (ax, t, neq, color='k', zorder=1):
             se = t[neq][n][1]*1.852
             sw = t[neq][n][2]*1.852
             nw = t[neq][n][3]*1.852
-            
+
+            label = neq
+            if neq == 'rmax':
+                label = str (int(t['vmax'][n]))           
+           
             xiso = []
             yiso = []
             for a in np.arange(0.,        0.5*np.pi, da):
@@ -44,6 +48,8 @@ def size (ax, t, neq, color='k', zorder=1):
                 xiso.append( x + dx*np.cos(a)  )
                 yiso.append( y + dy*np.sin(a)  )
                 
+            ax.text(x + dx + 0.05*dx, y, label, color=color, fontsize=7)
+ 
             for a in np.arange(0.5*np.pi,    np.pi, da):
                 dx = 180./(np.pi*R)*nw/np.cos( np.radians(y))
                 dy = 180./(np.pi*R)*nw

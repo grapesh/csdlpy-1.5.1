@@ -13,7 +13,10 @@ def stationsList ( csvFile, fields ):
         for row in reader:
             line = []
             for f in fields:
-                line.append (row[f])
+                try:
+                    line.append (row[f])
+                except:
+                    continue
             output.append(line)
     return output
 
