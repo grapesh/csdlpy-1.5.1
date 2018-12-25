@@ -55,7 +55,7 @@ def latestForecast (now = datetime.utcnow()):
             'tHHz'     : tHHz} 
 
 #==============================================================================
-def getPointsWaterlevel ( ncFile ):    
+def getPointsWaterlevel ( ncFile, verbose=1 ):    
     """
     Reads water levels at stations 
     Args: 
@@ -63,12 +63,13 @@ def getPointsWaterlevel ( ncFile ):
     Returns:
         dict: 'lon', 'lat', 'time', 'base_date', 'zeta', 'stations'
     """
-    print '[info]: Reading waterlevels from ' + ncFile               
+    if verbose:
+        print '[info]: Reading waterlevels from ' + ncFile               
     if not os.path.exists (ncFile):
         print '[error]: File ' + ncFile + ' does not exist.'
         return
 
-    z = adcirc.readTimeSeries (ncFile, 'zeta')   
+    z = adcirc.readTimeSeries (ncFile, 'zeta', verbose)   
     
     xy_mltplr = 1.00 #0.01745323168310549 was magic ESTOFS1 Multiplier...
     z['lon']  = xy_mltplr*z['lon']
