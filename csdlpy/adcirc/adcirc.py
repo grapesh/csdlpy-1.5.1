@@ -135,11 +135,12 @@ def readGrid ( gridFile ):
 
 
 #==============================================================================
-def readTimeSeries (ncFile, ncVar = 'zeta'):
+def readTimeSeries (ncFile, ncVar = 'zeta', verbose=1):
     """
     Reads fort.61.nc-like file
     """
-    print '[info]: Reading [' + ncVar + '] from ' + ncFile
+    if verbose:
+        print '[info]: Reading [' + ncVar + '] from ' + ncFile
     if not os.path.exists (ncFile):
         print '[error]: File ' + ncFile + ' does not exist.'
         return
