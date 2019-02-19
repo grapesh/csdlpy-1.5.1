@@ -8,6 +8,30 @@ from datetime import datetime
 import numpy as np
 from csdlpy import transfer
 
+
+#==============================================================================
+def readData (xmlFile):
+    """
+    Reads data from xmlFile instead from OpenDAP server (getData)
+    Args:
+        xmlFile (str): full path to xml data file
+    Returns:
+        ('dates' (datetime), 'values' (float)):
+            parsed time series record of observations.
+    """
+   ## Parse the file
+    dates  = []
+    values = []
+    lines = open(xmlFile).readlines()
+    for line in lines:
+        try:
+            dates.append  (datetime.strptime(line[13:29],'%Y-%m-%d %H:%M'))
+            values.append (float(line[31:38]))
+        except:
+            pass
+
+    return {'dates' : dates, 'values' : values}
+
 #==============================================================================
 def getData (stationID,  dateRange, 
              product='waterlevelrawsixmin', datum='MSL', units='meters', verbose=False):
