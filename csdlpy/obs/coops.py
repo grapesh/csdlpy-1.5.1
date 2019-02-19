@@ -192,31 +192,25 @@ def getStationInfo (stationID):
         print '[error]: cannot get info for  ' + stationID
         return None
 
+
 #==============================================================================
-def getActiveStations ():
+def getActiveStations (request = 'https://access.co-ops.nos.noaa.gov/nwsproducts.html?type=current'):
     """
     Downloads and parses the list of CO-OPS active tide gauges.
     """
-    request = 'https://access.co-ops.nos.noaa.gov/nwsproducts.html?type=current'
-    lines = transfer.readlines (request)    
+    if 'http' in request:
+        lines = transfer.readlines (request)
+    else:
+        lines = open(request).readlines()
 
     active = dict()
     active['nos_id'] = []
     active['nws_id'] = []
     active['lon']    = []
     active['lat']    = []
-    for line in lines:        
+    for line in lines:
         if line[0:4] == '<br>':
             try:
-                ## Well, COOPS became messy with this table.
-                ## Switching back to formatted read... Sigh 
-
-                #s = line.split()                                 
-                #active['nos_id'].append(int(s[1]))
-                #active['nws_id'].append(s[2])   
-                #active['lon'].append(float(s[4]))
-                #active['lat'].append(float(s[3]))
-
                 active['nos_id'].append(int(line[5:12]))
                 active['nws_id'].append(line[13:18])
                 active['lon'].append(float(line[65:76]))
@@ -224,7 +218,7 @@ def getActiveStations ():
 
 
             except:
-                pass                    
+                pass
     return active
 
 #==============================================================================
