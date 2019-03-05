@@ -300,12 +300,12 @@ def addSurface (grid, surface,
 
 
 #==============================================================================
-def stageStationPlot (xlim, ylim, now, datums, floodlevels):
+def stageStationPlot (xlim, ylim, now, datums, floodlevels, zero='MSL'):
     """
     stages the hydrograph plot with vertical datums and flood levels.
     Returns figure and axis handles.
     """
-
+        
     fig, ax = plt.subplots(sharex=True, figsize=(14,4.5))
     ax2 = ax.twinx()
     ax.plot([],[])
@@ -314,13 +314,20 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
     datum_mllw_ft = datums['datum_mllw_ft']
     datum_msl_ft  = datums['datum_msl_ft']
     datum_hat_ft  = datums['datum_hat_ft']
+
+    shift = 0.
+    datum_msl_m = 0
+    if zero is 'MLLW':
+        shift =  - datum_mllw_ft + datum_msl_ft
+        datum_msl_m = 1./3.28084 * datum_msl_ft
     
     fl_major_ft   = floodlevels['fl_major_ft']
     fl_moder_ft   = floodlevels['fl_moder_ft']
     fl_minor_ft   = floodlevels['fl_minor_ft']
 
+
     # Compute and plot minor flood level
-    fl_minor_m = 1./3.28084*(datum_mhhw_ft+fl_minor_ft-datum_msl_ft) 
+    fl_minor_m = 1./3.28084*(datum_mhhw_ft+fl_minor_ft-datum_msl_ft+shift) 
     if not np.isnan(fl_minor_m) and fl_minor_m < ylim[1]:
         ax.plot(xlim[0], fl_minor_m, 'dr', markerfacecolor='r')
         ax.text(xlim[0], fl_minor_m,\
@@ -332,7 +339,7 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
         ax.add_patch(p)
             
     # Compute and plot moderate flood level
-    fl_moder_m = 1./3.28084*(datum_mhhw_ft+fl_moder_ft-datum_msl_ft) 
+    fl_moder_m = 1./3.28084*(datum_mhhw_ft+fl_moder_ft-datum_msl_ft+shift) 
     if not np.isnan(fl_moder_m) and fl_moder_m < ylim[1]:
         ax.plot(xlim[0], fl_moder_m, 'dr', markerfacecolor='r')
         ax.text(xlim[0], fl_moder_m,\
@@ -344,7 +351,7 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
         ax.add_patch(p)
 
     # Compute and plot major flood level
-    fl_major_m = 1./3.28084*(datum_mhhw_ft+fl_major_ft-datum_msl_ft) 
+    fl_major_m = 1./3.28084*(datum_mhhw_ft+fl_major_ft-datum_msl_ft+shift) 
     if not np.isnan(fl_major_m) and fl_major_m < ylim[1]:
         ax.plot(xlim[0], fl_major_m, 'dr', markerfacecolor='r')
         ax.text(xlim[0], fl_major_m,\
@@ -356,7 +363,7 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
         ax.add_patch(p)
 
     # Compute and plot MHHW datum
-    datum_mhhw_m = 1./3.28084*(datum_mhhw_ft-datum_msl_ft) 
+    datum_mhhw_m = 1./3.28084*(datum_mhhw_ft-datum_msl_ft+shift) 
     if not np.isnan(datum_mhhw_m) and datum_mhhw_m < ylim[1]:
         ax.plot(xlim, [datum_mhhw_m, datum_mhhw_m], color='c')
         ax.plot(xlim[1], datum_mhhw_m, 'dc', markerfacecolor='c')
@@ -364,7 +371,7 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
                 datum_mhhw_m + 0.05, 'MHHW',color='c',fontsize=7)
 
     # Compute and plot MLLW datum
-    datum_mllw_m = 1./3.28084*(datum_mllw_ft-datum_msl_ft) 
+    datum_mllw_m = 1./3.28084*(datum_mllw_ft-datum_msl_ft+shift) 
     if not np.isnan(datum_mllw_m) and datum_mllw_m > ylim[0] and datum_mllw_m < ylim[1]:
         ax.plot(xlim, [datum_mllw_m, datum_mllw_m], color='c')
         ax.plot(xlim[1], datum_mllw_m, 'dc', markerfacecolor='c')
@@ -372,7 +379,7 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
                 datum_mllw_m + 0.05, 'MLLW',color='c',fontsize=7)
 
     # Compute and plot HAT datum
-    datum_hat_m  = 1./3.28084*(datum_hat_ft-datum_msl_ft) 
+    datum_hat_m  = 1./3.28084*(datum_hat_ft-datum_msl_ft+shift) 
     if not np.isnan(datum_hat_m) and datum_hat_m < ylim[1]:
         ax.plot(xlim, [datum_hat_m, datum_hat_m], color='y')
         ax.plot(xlim[1], datum_hat_m, 'dy', markerfacecolor='y')
@@ -380,13 +387,15 @@ def stageStationPlot (xlim, ylim, now, datums, floodlevels):
                 datum_hat_m  + 0.05, 'HAT',color='y',fontsize=7)
 
     # Plot LMSL datum
-    ax.plot(xlim[1], 0, 'dk',color='k')
-    ax.text(xlim[1] - dt(hours=6), 0.05, 'LMSL',color='k',fontsize=7)
+    if not np.isnan(shift):
+        ax.plot(xlim, [1./3.28084*shift, 1./3.28084*shift], color='k')
+        ax.plot(xlim[1], 1./3.28084*shift, 'dk',color='k')
+        ax.text(xlim[1] - dt(hours=6), 0.05+1./3.28084*shift, 'LMSL',color='k',fontsize=7)
 
     # Plot 'now' line
-    ax.plot( [now, now], ylim, 'k',linewidth=1)
-    ax.text(  now + dt(hours=1),  ylim[1]-0.4,'N O W', color='k',fontsize=6, 
-              rotation='vertical', style='italic')
+    #ax.plot( [now, now], ylim, 'k',linewidth=1)
+    #ax.text(  now + dt(hours=1),  ylim[1]-0.4,'N O W', color='k',fontsize=6, 
+    #          rotation='vertical', style='italic')
     
     return fig, ax, ax2
 
