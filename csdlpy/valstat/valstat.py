@@ -59,7 +59,7 @@ def rvalue(m, d):
     """
     Returns R-value (Pearson correlation coefficient)
     """    
-    rval = np.nansum( (d-np.nanmean(d))*(m-np.nanmean(d)) ) / \
+    rval = np.nansum( (d-np.nanmean(d))*(m-np.nanmean(m)) ) / \
                     (np.sqrt(np.nansum( (d-np.nanmean(d))**2 ))* \
                      np.sqrt(np.nansum( (m-np.nanmean(m))**2 )) )
     return rval
